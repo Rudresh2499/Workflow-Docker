@@ -20,11 +20,11 @@ version_bump_logic()
     fi
 }
 
-if [ "${WORKFLOW_TYPE}" == "PR" ]; then
+if [ "${WORKFLOW_TYPE}" = "PR" ]; then
     build_number=$(shuf -i 1-100000 -n 1)
     echo "${CURRENT_VERSION}-build${build_number}"
 fi
 
-if [ "${WORKFLOW_TYPE}" == "CI" ]; then
+if [ "${WORKFLOW_TYPE}" = "CI" ]; then
     version_bump_logic ${LABEL_NAME} ${CURRENT_VERSION}
 fi
