@@ -9,11 +9,11 @@ version_bump_logic()
     label_name=$1
     current_version=$2
 
-    if [ ${label_name} == "major" ]; then
+    if [ ${label_name} = "major" ]; then
         echo $current_version | awk 'BEGIN { FS="." } { printf "%01d.%01d.%01d\n", ++$1, 0, 0 }'
-    elif [ ${label_name} == "minor" ]; then
+    elif [ ${label_name} = "minor" ]; then
         echo $current_version | awk 'BEGIN { FS="." } { printf "%01d.%01d.%01d\n", $1, ++$2, 0 }'
-    elif [ ${label_name} == "patch" ]; then
+    elif [ ${label_name} = "patch" ]; then
         echo $current_version | awk 'BEGIN { FS="." } { printf "%01d.%01d.%01d\n", $1, $2, ++$3 }'
     else
         echo "Pull request assigned a wrong label"
