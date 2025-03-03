@@ -56,6 +56,7 @@ jobs:
             - name: Preliminary version bumping
               id: preliminary-version-bump
               run: |
+                chmod +x ${{ github.workspace }}/scripts/version_bump.sh
                 echo "version_info=$(${{ github.workspace }}/scripts/version_bump.sh ${{ inputs.label_name }} ${{ steps.fetch-version-information.outputs.majorMinorPatch }} ${{ inputs.workflow_type }})" >> $GITHUB_OUTPUT
 
               
