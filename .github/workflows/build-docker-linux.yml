@@ -50,7 +50,7 @@ jobs:
               with:
                 context: .
                 file: ${{ github.workspace }}/Dockerfile
-                tags: ghcr.io/${{ secrets.DOCKER_REGISTRY_USERNAME }}/${{ inputs.base_image }}/${{ inputs.image_name }}:${{ inputs.version_info }}
+                tags: ghcr.io/rudresh2499/${{ inputs.base_image }}/${{ inputs.image_name }}:${{ inputs.version_info }}
                 build-args: |
                   CONTAINER_USER=${{ secrets.CONTAINER_USER }}
                 secrets: |
