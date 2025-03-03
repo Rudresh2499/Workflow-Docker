@@ -29,8 +29,15 @@ jobs:
             - name: Checkout the repository
               uses: actions/checkout@v4
               with:
-                  fetch-depth: 0
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                fetch-depth: 0
+                token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout workflow repository
+              uses: actions/checkout@v4
+              with:
+                repository: Rudresh2499/Workflow-Docker
+                ref: master
+                token: ${{ secrets.DOCKER_REGISTRY_PAT }}
 
             - name: Install Dotnet dependency
               uses: actions/setup-dotnet@v4
