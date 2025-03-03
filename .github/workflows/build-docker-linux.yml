@@ -1,0 +1,59 @@
+name: build-docker-linux
+
+on:
+    workflow_call: 
+        inputs:
+            workflow_type:
+                description: 'Provides the workflow run type [PR/CI]'
+                required: true
+                type: string
+
+            base_image:
+                description: 'Provides the name of the base OS used by the image'
+                required: true
+                type: string
+
+            image_name:
+                description: 'Provides the image name supplied by the calling repository'
+                required: true
+                type: string
+
+            version_info:
+                description: 'Provides the version information for the tagging the image'
+                required: true
+                type: string
+
+jobs:
+    build-docker-linux:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 60
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup QEMU # Enable builds for multiple CPU architectures on a single architecture host
+              uses: docker/setup-qemu-action@v3
+
+            - name: Setup Docker buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Login to docker registry
+              uses: docker/login-action@v3
+              with: 
+                registry: ghcr.io
+                username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+                password: ${{ secrets.DOCKER_REGISTRY_PAT }}
+
+            - name: Docker Build and Push
+              uses: docker/build-push-action@v6
+              with:
+                context: .
+                file: ${{ github.workspace }}/Dockerfile
+                tags: ${{ inputs.base_image }}/${{ inputs.image_name }}:${{ inputs.version_info }}
+                build-args: |
+                  CONTAINER_USER=${{ secrets.CONTAINER_USER }}
+                secrets: |
+                  USER_PASSWORD=${{ secrets.CONTAINER_PASSWORD }}
+                platforms: linux/amd64
+                push: ${{ inputs.workflow_type == 'CI' }}
