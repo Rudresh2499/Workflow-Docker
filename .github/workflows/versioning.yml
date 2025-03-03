@@ -1,0 +1,54 @@
+name: versioning
+
+on: 
+    workflow_call: 
+        inputs:
+            workflow_type:
+                description: 'Describes the workflow type'
+                required: true
+                type: string
+
+            label_name:
+                description: 'Describes the label for version bump strategy'
+                required: true
+                type: string
+
+        outputs:
+            version_info:
+                description: 'Provides the current version information'
+                value: ${{ jobs.versioning.outputs.version_info }}
+
+jobs:
+    versioning:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 20
+        outputs:
+            version_info: ${{ steps.preliminary-version-bump.outputs.version_info }}
+
+        steps:
+            - name: Checkout the repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Install Dotnet dependency
+              uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: '6.0.x'
+
+            - name: Install GitVersion
+              uses: gittools/actions/gitversion/setup@v3.1.11
+              with:
+                  versionSpec: '6.0.x'
+
+            - name: Fetch version information
+              id: fetch-version-information
+              uses: gittools/actions/gitversion/execute@v3.1.11
+
+            - name: Preliminary version bumping
+              id: preliminary-version-bump
+              run: |
+                echo "version_info=$(${{ github.workspace }}/scripts/version_bump.sh ${{ inputs.label_name }} ${{ steps.fetch-version-information.outputs.majorMinorPatch }} ${{ inputs.workflow_type }})" >> $GITHUB_OUTPUT
+
+              

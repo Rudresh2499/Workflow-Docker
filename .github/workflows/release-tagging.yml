@@ -1,0 +1,24 @@
+name: release-tagging
+
+on: 
+    workflow_call: 
+        inputs:
+            version_info:
+                description: 'Provides the version information for the tagging the image'
+                required: true
+                type: string
+
+jobs:
+    release-tagging:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Tag release
+              uses: mathieudutour/github-tag-action@v6.2
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  custom_tag: ${{ inputs.version_info }}

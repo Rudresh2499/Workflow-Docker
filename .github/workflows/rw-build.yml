@@ -1,0 +1,50 @@
+name: build-workflow
+
+on: 
+    workflow_call: 
+        inputs:
+            workflow_type:
+                description: 'Describes the workflow type'
+                required: true
+                type: string
+
+            base_image:
+                description: 'Describes the base image used in the docker'
+                required: true
+                type: string
+
+            image_name:
+                description: 'Describes the name of the image'
+                required: true
+                type: string
+
+            label_name:
+                description: 'Describes the label for version bump strategy'
+                required: true
+                type: string
+
+jobs:
+    versioning:
+        uses: ./.github/workflows/versioning.yml
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}
+            label_name: ${{ inputs.label_name }}
+
+    build-linux:
+        uses: ./.github/workflows/build-docker-linux.yml
+        needs: [ versioning ]
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}
+            base_image: ${{ inputs.base_image }}
+            image_name: ${{ inputs.image_name }}
+            version_info: ${{ needs.versioning.outputs.version_info }}
+
+    release-tagging:
+        uses: ./.github/workflows/release-tagging.yml
+        needs: [ versioning, build-linux ]
+        if: ${{ inputs.workflow_type == 'CI' }}
+        secrets: inherit
+        with:
+            version_info: ${{ inputs.base_image }}-${{ needs.versioning.outputs.version_info }}
