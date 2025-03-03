@@ -32,13 +32,6 @@ jobs:
                 fetch-depth: 0
                 token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Checkout workflow repository
-              uses: actions/checkout@v4
-              with:
-                repository: Rudresh2499/Workflow-Docker
-                ref: master
-                token: ${{ secrets.DOCKER_REGISTRY_PAT }}
-
             - name: Install Dotnet dependency
               uses: actions/setup-dotnet@v4
               with:
@@ -52,6 +45,13 @@ jobs:
             - name: Fetch version information
               id: fetch-version-information
               uses: gittools/actions/gitversion/execute@v3.1.11
+
+            - name: Checkout workflow repository
+              uses: actions/checkout@v4
+              with:
+                repository: Rudresh2499/Workflow-Docker
+                ref: master
+                token: ${{ secrets.DOCKER_REGISTRY_PAT }}
 
             - name: Preliminary version bumping
               id: preliminary-version-bump
