@@ -26,6 +26,10 @@ jobs:
             version_info: ${{ steps.preliminary-version-bump.outputs.version_info }}
 
         steps:
+            - name: Check inputs
+              run: |
+                echo ${{ inputs.label_name }}
+                echo ${{ inputs.workflow_type }}
             - name: Checkout the repository
               uses: actions/checkout@v4
               with:
