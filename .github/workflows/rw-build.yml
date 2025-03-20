@@ -24,7 +24,18 @@ on:
                 type: string
 
 jobs:
+    check-inputs:
+        runs-on: [ubuntu-latest]
+        steps:
+            - name: Show inputs
+              run: |
+                echo ${{ inputs.workflow_type }}
+                echo ${{ inputs.base_image }}
+                echo ${{ inputs.label_name }}
+                echo ${{ inputs.image_name }}
+
     versioning:
+        needs: [ check-inputs ]
         uses: ./.github/workflows/versioning.yml
         secrets: inherit
         with:
