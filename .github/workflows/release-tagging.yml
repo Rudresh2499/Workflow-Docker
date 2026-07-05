@@ -19,4 +19,4 @@ jobs:
 
             - name: Tag release
               run: |
-                ${{ github.workspace }}/push_tag.sh ${{ inputs.version_info }} ${{ secrets.DOCKER_REGISTRY_PAT }}
+                ${{ github.workspace }}/scripts/push_tag.sh ${{ inputs.version_info }} ${{ secrets.DOCKER_REGISTRY_PAT }}
