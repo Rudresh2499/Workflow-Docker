@@ -58,4 +58,4 @@ jobs:
         if: ${{ inputs.workflow_type == 'CI' }}
         secrets: inherit
         with:
-            version_info: ${{ inputs.base_image }}-${{ needs.versioning.outputs.version_info }}
+            version_info: ${{ needs.versioning.outputs.version_info }}
